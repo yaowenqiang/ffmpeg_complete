@@ -555,3 +555,121 @@ Preset: speed vs compression
 > ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 -preset slow transcoded.mp4
 
 
+
+Streaming playback
+
+> .m3u8
+
+
+Streaming protocols
+
++ RTMP(RealTime Message Protocol)
+  + Based on TCP
+  + Low-latency
+  + Originally developed by Macromedia (acquired by Adobe)
+  + Adoby Flash Player
+  + Hugrly popular until recently
+  + Not being updated any more
+  + Modern codecs not supported
+  + less popular now
+  + Requires extra browser plugin
+  + Flash support dropped
+  + Requires RTMP server
++ HTTP
+  + Widest reach
+  + TCP based
+  + Unlikely to be blocked anywhere
+  + No separate streaming server required
+  + HTML5 video
+  + MSE(Media Source Extensions)
+  + HLS, MPEG-DASH
+  + Javascript players
+  + Most popular
+  + No extra browser plugin needed
+  + No Separated server required
+  + http injecting(not used much)
+  + latency higher
++ SRT
+  + Secure Reliable Transport
+  + UDP based
+  + Faster then RTMP
+  + Reliable on unpredicatable networks
+  + almost no adoption
+  + UDP not supported in browsers
+  + Becoming popular
+  + Reliable, low-latency
+
+FFmpeg: The Swiss Army Knife of internet Streaming
+
+Progressive Download
+
+Singel-file Media
+
++ Not segmented
++ Easier to handle
++ Native browser support(HTML5 <video/> and <audio>)
++ Copy
++ Downlaod
++ Send to other services
+
+Container formats
+
++ mp4
++ WebM
++ Ogg
+
+How playback works
+
++ What is the file format? Do i know how to parse the file?
++ Is it audio or video or both?
++ What is the video width and height?
++ Codecs
++ If i have to seek to the 123rd second, where this file can i find the media data for that particular time?
+
+Th index
+
++ Lookup table
++ Where to find media data of a time or frame
++ Difficult for the encoder to know the contents of the index beforehand
++ That is why it is usually written at the end
+
+Structure of MP4
+
++ Similar to Apple Quicktime File Format(QT/MOV)
++ Hierarchical
++ Atom/Box
+
+ftyp mdat moov ->non-fast-started
+ftyp moov mdat ->fast-started mp4
+
+http range request
+partial content
+
+
+Questions
+
++ How to check fast-started-ness?
++ How to fast-start?
+  + Tools
+  + ffmpeg
+
+> ffmpeg -y -f lavfi -i testsrc=duration=5 test.mp4
+> ffmpeg -v trace -i test.mp4 2>&1 | grep -e type:\'mdat\' -e type:\'moov\'
+
+[in#0 @ 0xab8c18000] type:'mdat' parent:'root' sz: 24100 48 26395
+[in#0 @ 0xab8c18000] type:'moov' parent:'root' sz: 2255 24148 26395
+
+no fast-play
+
+> ffmpeg -i test.mp4 -movflags +faststart -c copy test-fast-started.mp4
+
+[in#0 @ 0x75cc18000] type:'moov' parent:'root' sz: 2255 40 26395
+[in#0 @ 0x75cc18000] type:'mdat' parent:'root' sz: 24100 2303 26395
+
+fast-play, moov first, mdat second
+
+
+
+
+
+
