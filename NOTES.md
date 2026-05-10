@@ -451,3 +451,107 @@ Filter Graphs(-filter_complex)
 
 > ffmpeg -v error -y -i bullfinch.mp4 -i ffmpeg-logo.png -filter_complex "[1:v]scale=-1:200[small_logo];[0:v][small_logo]overlay=x=W-w-50:y=H-h-50,split=2[sd_in][hd_in];[sd_in]=scale=-2:480[sd];[hd_in]scale=-2:1080[hd];[0:a]pan=stereo|FL=c0+c2|FR=c1+c3[stereo_mix]" -map [sd] sd.mp4 -map [hd] hd.mp4 -map [stereo_mix] stereo_mix.mp3
 
+
+Encoding
+
+Choosing a codec
+
++ Compression
++ Quality vs Size
++ Stream vs post-production
++ Target application
++ Compatibility
+
+Encoder options
+
++ Global
+  + profile
+  + bitrate
+  + GDP size
++ Private
+  + x264-params
+
+
+Examples
+
+> ffprobe -v error bullfinch.mp4 -select_streams v -show_entries stream=codec_name -print_format default=noprint_wrappers=1
+
+> ffmpeg -v error -y  -i bullfinch.mov  transcoded.mxf
+> ffprobe -v error transcoded.mxf -select_streams v -show_entries stream=codec_name -print_format default=noprint_wrappers=1
+
+> ffmpeg -v error -y  -i bullfinch.mov  transcoded.mp4
+> ffprobe -v error transcoded.mp4 -select_streams v -show_entries stream=codec_name -print_format default=noprint_wrappers=1
+
+> ffmpeg -v error -y  -i bullfinch.mov -vcodec libx264 -g 30 transcoded.mxf
+> ffmpeg -encoders 
+
+> ffmpeg -v error -y  -i bullfinch.mov -vcodec libvpx-vp9  transcoded.mxf
+
+> ffmpeg -v error -y  -i bullfinch.mov -vcodec libvpx-vp9  transcoded.mp4
+> ffprobe -v error transcoded.mp4 -select_streams a -show_entries stream=codec_name -print_format default=noprint_wrappers=1
+
+> $ ffmpeg -v error -y  -i bullfinch.mov -vcodec libvpx-vp9  -acodec libmp3lame  transcoded.mp4
+
+> ffprobe -v error transcoded.mp4 -select_streams a -show_entries stream=codec_name -print_format default=noprint_wrappers=1
+
+H.264/AVC(advanced video coding)
+
+Encoder 
+
++ libx264
+
+Profiles
+
++ profile: baseline / main / high
+
+Rate control
+
++ CRF: Constant quality, variable bitrate
++ Two-pass ABR: Variable quality,constant bitrate
+
+CRF: target a quality
+
+- crf: 0-51(high to low),default is 23
+
+> ffprobe -v error bullfinch.mov -select_streams v -show_entries stream=codec_name,bit_rate -print_format default=noprint_wrappers=1
+
+
+> ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 transcoded.mp4 
+
+> ffprobe -v error transcoded.mp4 -select_streams v -show_entries stream=codec_name,bit_rate -print_format default=noprint_wrappers=1
+
+> ffplay -v error -an transcoded.mp4 
+
+ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 -crf 45 transcoded.mp4
+
+ABR: Target a bitrate
+
+- b:v:bitrate
+
+> ffprobe -v error transcoded.mp4 -select_streams v -show_entries stream=codec_name,bit_rate -print_format default=noprint_wrappers=1
+
+
+> ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 -b:v 2M transcoded.mp4
+
+> ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 -b:v 2M -pass 1 -f null /dev/null
+> ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 -b:v 2M -pass 2 transcoded.mp4
+
+
+Preset: speed vs compression
+
++ ultrafast
++ superfast
++ veryfast
++ faster
++ fast
++ medium(default)
++ slow
++ slower
++ veryslow
++ placebo
+
+> du -sh transcoded.mp4
+> ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 -preset ultrafast transcoded.mp4
+> ffmpeg -v error -y -i bullfinch.mov -vcodec libx264 -preset slow transcoded.mp4
+
+
