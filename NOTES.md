@@ -560,9 +560,6 @@ Streaming playback
 
 > .m3u8
 
-
-Streaming protocols
-
 + RTMP(RealTime Message Protocol)
   + Based on TCP
   + Low-latency
@@ -667,6 +664,86 @@ no fast-play
 [in#0 @ 0x75cc18000] type:'mdat' parent:'root' sz: 24100 2303 26395
 
 fast-play, moov first, mdat second
+
+
+Adaptive Streaming
+
++ Multiple qualities(resolution/bitrate)
++ Player can adapt dynamically based on current conditions
++ Segmented
+
+1280x720 ->4 Mbps
+854x480 ->2 Mbps
+426x240 ->500 kbps
+
+Adaptive Resolution
+
+HLS & DASH
+
+HLS
+
++ HTTP Live Streaming
++ developed by apple
++ REleased in 2009
++ Most popular streaming format
++ Proprietary(专有的)
+
+DASH
+
++ Dynamic Adaptive Streaming over HTTP
++ MPEG-DASH
++ First international standard in 2012
++ Collaboration of many companies
+
+Browser Support
+
+HLS
+
++ Safari:native
++ Others: MSE(Media Source Element)
+
+DASH
+
++ MSE
+
+
+Codec
+
+HLS
+
++ H.264/AVC
++ H.265/HEVC
+
+DASH
+
++ Codec agnostic
++ H.264, H.265, vp9 ...
+
+Container
+
+HLS
+
++ TS
++ fMP4
+
+
+DASH
+
++ fMP4
+
+Manifest
+
+HLS
+
++ M3U8
+  + Media playlist
+  + Master playlist
+
+DASH
+
++ MPD
+  + XML
+
 
 
 
