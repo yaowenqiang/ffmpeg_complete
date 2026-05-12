@@ -745,6 +745,71 @@ DASH
   + XML
 
 
+encoding Considerations
+
+Frame types - I(iframe),P(predicted pictures),B
+
+Group of Pictures - GOP
+
+closed gop
+open gop structure
+
+segments in adaptive streaming
+
+continuous stream
+
+Segments: Switching and Duration
+
+encoding efficiency: short segments
+encoding efficiency: long segments
+
+short segments => more I-frames => less compression 
+long segments => fewer I-frames => Better compression 
+
+segment Duration: Recommendations
+
++ Apple: 6 seconds
++ 2-4 seconds is usually good
+
+codecs
+
+| codec | Compatibility | HLS | DASH |
+| --------------- | --------------- | --------------- | --------------- |
+| H.264 | high | yes | yes |
+| H.265 | Medium | yes | yes |
+| VP9 | High | no | yes |
+
+containers
+
+ts(HLS v3)
+fmp4(HLS v4+, DASH)
+
+muxing audio and video
+
++ muxed together
++ separate audio, separate video
+
+
+HLS or DASH?
+
+| Format | Compatibility | Brower support |
+| ------------- | -------------- | -------------- |
+| HLS | High | JS+MSE/Safari |
+| DASH | High | JS+MSE |
+
+
+HLS and DASH
+
+
+
+
+
+
+
+
+
+
+
 
 
 
